@@ -1,0 +1,105 @@
+#
+# For a description of the syntax of this configuration file,
+# see the file kconfig-language.txt in the NuttX tools repository.
+#
+
+comment "BL702 Configuration Options"
+
+menu "BL702 Peripheral Support"
+
+config BL702_HAVE_UART0
+	bool "UART0"
+	select BL702_UART0
+	select ARCH_HAVE_UART0
+	select UART0_SERIALDRIVER
+	select ARCH_HAVE_SERIAL_TERMIOS
+	select ARCH_HAVE_PWM_MULTICHAN
+
+config BL702_UART0
+	bool
+	default n
+
+config BL702_HAVE_UART1
+	bool "UART1"
+	select BL702_UART1
+	select ARCH_HAVE_UART1
+	select UART1_SERIALDRIVER
+	select ARCH_HAVE_SERIAL_TERMIOS
+
+config BL702_UART1
+	bool
+	default n
+
+config BL702_TIMER0
+	bool "TIMER0"
+
+config BL702_TIMER1
+	bool "TIMER1"
+
+config BL702_PWM0
+	bool "PWM0"
+
+config BL702_I2C0
+	bool "I2C0"
+
+config BL702_SPI0
+	bool "SPI0"
+
+config BL702_RTC
+	bool "RTC"
+
+config BL702_RTC_USE_XTAL32K
+	bool "Select enable RTC XTAL32K clock source, otherwise use internal RC32K"
+	default n
+	depends on BL702_RTC
+
+config BL702_SPIFLASH
+	bool "SPI Flash"
+	default n
+	select MTD
+	select MTD_PARTITION
+
+menu "SPI Flash configuration"
+	depends on BL702_SPIFLASH
+
+config BL702_MTD_OFFSET
+	hex "MTD base address in SPI Flash"
+	default 0x001c5000
+	---help---
+		MTD base address in SPI Flash.
+
+config BL702_MTD_SIZE
+	hex "MTD size in SPI Flash"
+	default 0x30000
+	---help---
+		MTD size in SPI Flash.
+
+endmenu # BL702_SPIFLASH
+
+config BL702_WIRELESS
+	bool "Wireless & WiFi Support"
+	depends on SCHED_WORKQUEUE
+	default n
+
+config BL702_WIRELESS_DEBUG
+	bool "Wireless Debug Log"
+	depends on BL702_WIRELESS
+	default n
+
+config BL702_WIRELESS_CONTRY_CODE
+	string "WiFi Contry Code"
+	depends on BL702_WIRELESS
+	default "CN"
+
+config BL702_NET_MULTI_INTERFACE
+	bool "STA and AP as independent interfaces"
+	depends on BL702_WIRELESS
+	default n
+
+config BL702_BLE_CONTROLLER
+	bool "ble controller support"
+	default n
+	depends on !DISABLE_MQUEUE
+	depends on SCHED_WORKQUEUE
+	depends on BL702_WIRELESS
+endmenu
